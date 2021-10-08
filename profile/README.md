@@ -5,7 +5,7 @@ Kubernetes gives you the framework to architect and develop services but when it
 
 Kuadrant aims to deliver a smooth experience to providers and consumers of services when it comes to rate limiting, authentication, authorization, discoverability, versioning, usage contracts, insights, etc. 
 
-### Components
+### Projects
 Kuadrant is the umbrella organization, its current active projects are:
 
 [Limitador](https://github.com/Kuadrant/limitador) - Rate limiting of requests to a Service prior to, or after, Authentication to protect a service, limit overall workload, or enforce business rules as to the use of the Service. It is a high-performance, low resource implementation that can be used directly with Envoy (RLS) or via a REST API. Includes single instance (multi-threaded) storage in memory or shared storage via an external Redis or Infinispan.
