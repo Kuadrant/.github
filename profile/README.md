@@ -15,5 +15,3 @@ Kuadrant is the umbrella organization, its current active projects are:
 [Kuadrant Controller](https://github.com/Kuadrant/kuadrant-controller) - The above components can be configured via Custom Resources specific to each of them. The Kuadrant controller exposes higher level objects (API Products & APIs for now) and  that simplify their use and takes care of configuring them when used together.
 
 [Kuadrant CTL](https://github.com/Kuadrant/kuadrantctl) which is currently the way to install Kuadrant
-
-An exploration and PoC is underway of a next gen Developer Portal that is broader than API Management, and could cover “Event APIs” and other needs.
