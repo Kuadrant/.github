@@ -6,4 +6,4 @@ Kubernetes gives you the framework to architect and develop services but when it
 Kuadrant aims to deliver a smooth experience to providers and consumers of services when it comes to rate limiting, authentication, authorization, discoverability, versioning, usage contracts, insights, etc. 
 
 ### [Join the conversation](https://join.slack.com/t/kuadrant/shared_invite/zt-16ggrm41h-z1HLYGkRxJ6l_oZVU~eQzQ)
-#### [Watch explanatory videos](https://www.youtube.com/channel/UCCZ0ByQA06jn9aB7YFL1Z6w)
+#### [Watch explanatory videos](https://www.youtube.com/@kuadrant)
