@@ -5,7 +5,7 @@ Gateways play a pivotal role in application connectivity. With Kuadrant, platfor
 Find out more at [Kuadrant.io](https://kuadrant.io/)
 
 ### Context
-Leveraging the emerging ingress standard [Gateway API](https://gateway-api.sigs.k8s.io/) , Kuadrant's features enable and empower cluster operators and application developers to work together to securely connect users with their services. Kuadrant empowers cluster administrators to deploy, manage, observe and protect services exposed via their gateways giving them the confidence to allow application developers to self-service knowing that endpoints exposed via these gateways are compliant, secure, visible and resilient.
+Leveraging the ingress standard [Gateway API](https://gateway-api.sigs.k8s.io/) , Kuadrant's features enable and empower cluster operators and application developers to work together to securely connect users with their services. Kuadrant empowers cluster administrators to deploy, manage, observe and protect services exposed via their gateways giving them the confidence to allow application developers to self-service knowing that endpoints exposed via these gateways are compliant, secure, visible and resilient.
 
 
 ### [Join the conversation](https://kubernetes.slack.com/archives/C05J0D0V525)
