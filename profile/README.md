@@ -9,7 +9,7 @@ Leveraging the ingress standard [Gateway API](https://gateway-api.sigs.k8s.io/) 
 
 ### Code of conduct
 
-Participation in the Kuadrant community is governed by the [CNCF Community Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
+Participation in the Kuadrant community is governed by the [Kuadrant Community Code of Conduct](https://github.com/Kuadrant/governance/blob/main/CODE_OF_CONDUCT.md).
 
 ### [Join the conversation](https://kubernetes.slack.com/archives/C05J0D0V525)
 #### [Watch explanatory videos](https://www.youtube.com/@kuadrant)
