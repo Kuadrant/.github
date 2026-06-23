@@ -1,0 +1,5 @@
+{
+  "name": "Contributor Governance",
+  "description": "Enforces triage labels, PR-issue linking, and triage gating for external contributors.",
+  "categories": ["automation"]
+}
