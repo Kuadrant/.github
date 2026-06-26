@@ -4,13 +4,12 @@ For general contribution guidance, see the [Kuadrant contributing guide](https:/
 
 ## Issue Triage
 
-All new issues are automatically labelled with `triage/needs-triage`. Issues move through these stages:
+All new issues are automatically labelled with `triage/needs-triage`. Once the team has discussed and prioritised an issue, a maintainer will move it to `triage/accepted`.
 
 | Label | Meaning |
 |---|---|
 | `triage/needs-triage` | New issue, awaiting maintainer review |
-| `triage/needs-discussion` | Needs further investigation or discussion before a decision |
-| `triage/accepted` | Reviewed and accepted — ready for work |
+| `triage/accepted` | Reviewed, prioritised, and ready for work |
 
 Only maintainers can change triage labels.
 
