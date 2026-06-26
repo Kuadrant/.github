@@ -13,6 +13,10 @@ name: Contributor Governance
 
 on:
   workflow_call:
+    secrets:
+      ORG_MEMBER_TOKEN:
+        required: true
+        description: PAT with read:org scope for org membership checks
 
 jobs:
   # ──────────────────────────────────────────────────────────────
@@ -131,7 +135,7 @@ jobs:
   #   d) No other non-org-member PR already targets the same issue
   # ──────────────────────────────────────────────────────────────
   check-pr:
-    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && (github.event.action == 'opened' || github.event.action == 'reopened')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -202,11 +206,15 @@ jobs:
               });
             }
 
-            // Method 2: Regex — catches #N references in title/body not formally linked
-            const issueRegex = /(?:(?:closes?|fixe?s?|resolves?)\s+)?(?:Kuadrant\/[\w-]+)?#(\d+)/gi;
+            // Method 2: Regex — catches #N references, Kuadrant/repo#N, and full GitHub URLs
+            const patterns = [
+              /(?:(?:closes?|fixe?s?|resolves?)\s+)?(?:Kuadrant\/[\w-]+)?#(\d+)/gi,
+              /https?:\/\/github\.com\/Kuadrant\/[\w-]+\/issues\/(\d+)/gi
+            ];
             const text = `${prTitle}\n${prBody}`;
             let match;
 
+            for (const issueRegex of patterns) {
             while ((match = issueRegex.exec(text)) !== null) {
               const issueNumber = parseInt(match[1]);
               if (!linkedIssues.has(issueNumber)) {
@@ -229,6 +237,7 @@ jobs:
                   console.log(`Could not fetch issue #${issueNumber}: ${error.message}`);
                 }
               }
+            }
             }
 
             // Check A: PR must have at least one linked issue
@@ -315,6 +324,7 @@ jobs:
                   { headers: { authorization: `token ${process.env.ORG_TOKEN}` } }
                 );
                 if (otherRes.status === 204) continue;
+                if (otherRes.status !== 404) throw new Error(`Org membership check failed for ${otherPr.user.login}: ${otherRes.status}`);
 
                 // Check if the other PR references the same issue
                 const otherPrQuery = `
