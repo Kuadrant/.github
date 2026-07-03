@@ -4,7 +4,7 @@
 # Jobs:
 #   1. label-new-issues     — auto-labels new issues with triage/needs-triage
 #   2. protect-triage-labels — reverts triage label changes by non-org-members
-#   3. check-pr              — closes PRs without a linked, triaged issue
+#   3. check-pr              — closes PRs without a linked, triaged, assigned issue
 #
 # Org members (Kuadrant) are exempt from all enforcement.
 # Requires org-level secret ORG_MEMBER_TOKEN with read:org scope.
@@ -132,7 +132,9 @@ jobs:
   #   a) PR must reference at least one issue (via GitHub link or #N in body)
   #   b) At least one linked issue must be open
   #   c) At least one open linked issue must have triage/accepted
-  #   d) No other non-org-member PR already targets the same issue
+  #   d) No linked accepted issue has the maintainers-only label
+  #   e) No other non-org-member PR already targets the same issue
+  #   f) PR author must be assigned to the linked issue
   # ──────────────────────────────────────────────────────────────
   check-pr:
     if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && (github.event.action == 'opened' || github.event.action == 'reopened')
@@ -303,8 +305,28 @@ jobs:
               return;
             }
 
-            // ── Anti-piggyback check ──
-            // Ensure no other non-org-member already has a PR for the same issue
+            // ── Check D: Maintainers-only issues are reserved for org members ──
+
+            const maintainersOnlyIssue = acceptedIssues.find(i => i.labels.includes('maintainers-only'));
+            if (maintainersOnlyIssue) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `Thanks for the contribution! The linked issue (#${maintainersOnlyIssue.number}) is marked as \`maintainers-only\` and is reserved for the maintainer team.`
+              });
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                state: 'closed'
+              });
+
+              return;
+            }
+
+            // ── Check E: No other non-org-member PR already targets the same issue ──
 
             for (const issue of acceptedIssues) {
               const prsInRepo = await github.rest.pulls.list({
@@ -368,5 +390,44 @@ jobs:
                   return;
                 }
               }
+            }
+
+            // ── Check F: PR author must be assigned to the linked issue ──
+
+            let assignedToAny = false;
+            const unassignedIssueNumbers = [];
+
+            for (const issue of acceptedIssues) {
+              const issueDetail = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number
+              });
+
+              const assignees = issueDetail.data.assignees.map(a => a.login);
+              if (assignees.includes(actor)) {
+                assignedToAny = true;
+                break;
+              }
+              unassignedIssueNumbers.push(issue.number);
+            }
+
+            if (!assignedToAny) {
+              const issueRefs = unassignedIssueNumbers.map(n => `#${n}`).join(', ');
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `Thanks for the contribution! The linked issue (${issueRefs}) isn't assigned to you. Please request assignment on the issue first, and if assigned, feel free to reopen this PR.`
+              });
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                state: 'closed'
+              });
+
+              return;
             }
 
