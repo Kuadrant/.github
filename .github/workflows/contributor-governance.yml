@@ -6,7 +6,8 @@
 #   2. protect-triage-labels — reverts triage label changes by non-org-members
 #   3. check-pr              — closes PRs without a linked, triaged, assigned issue
 #
-# Org members (Kuadrant) are exempt from all enforcement.
+# Org members (Kuadrant) and Bot-type PR authors (org-installed apps,
+# e.g. dependabot) are exempt from all enforcement.
 # Requires org-level secret ORG_MEMBER_TOKEN with read:org scope.
 #
 name: Contributor Governance
@@ -151,6 +152,18 @@ jobs:
           script: |
             const actor = context.payload.pull_request.user.login;
             const org = context.repo.owner;
+
+            // --- Bot exemption: app-authored PRs skip all PR rules ---
+            // A Bot-type PR author is always a GitHub App installed by the org
+            // (apps need pull-request write on the target repo to open a PR),
+            // so this can't be abused by drive-by contributors. Covers
+            // dependabot, konflux, renovate, etc. Closing dependabot PRs is
+            // actively harmful: dependabot treats close as "don't notify me
+            // again about this release", silently suppressing security bumps.
+            if (context.payload.pull_request.user.type === 'Bot') {
+              console.log(`${actor} is a bot (org-installed app), skipping PR checks`);
+              return;
+            }
 
             // --- Org membership check: org members skip all PR rules ---
             const res = await fetch(
