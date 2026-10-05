@@ -23,3 +23,7 @@ Every PR from an external contributor must:
 4. **Not duplicate existing work** — the linked issue must not already have an open PR from another contributor.
 
 PRs that don't meet these requirements will be automatically closed. Your branch won't be deleted, so you can reopen once the requirements are met.
+
+Maintainers can approve an exception by adding `triage/accepted` directly to the PR. A PR with this label skips all contributor-governance PR checks when opened or reopened, even if it has no linked issue. Adding the label does not reopen a closed PR; reopen it after applying the label.
+
+PRs from Kuadrant org members, GitHub App bots, and accounts listed in the `CONTRIB_ALLOWLIST` Actions variable also skip these checks. The allowlist is a JSON array of GitHub usernames, managed at the org level for trusted contributors and automation accounts registered as regular users.
